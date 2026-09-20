@@ -1,4 +1,5 @@
 using UnityEngine;
+using System;
 
 public class CustomerManager : MonoBehaviour
 {
@@ -8,6 +9,8 @@ public class CustomerManager : MonoBehaviour
     [SerializeField] private OrderGenerator orderGenerator;
 
     public Customer CurrentCustomer { get; private set; }
+
+    public event Action<Customer> CurrentCustomerChanged;
 
     private void Start()
     {
@@ -44,6 +47,8 @@ public class CustomerManager : MonoBehaviour
         CurrentCustomer.Initialize(10f, order);
         CurrentCustomer.PatienceExpired += HandleCustomerPatienceExpired;
 
+        CurrentCustomerChanged?.Invoke(CurrentCustomer);
+
         Debug.Log(
             $"👤 New customer arrived! Order: {order.Product.ProductName}"
         );
@@ -56,8 +61,13 @@ public class CustomerManager : MonoBehaviour
 
         CurrentCustomer.PatienceExpired -= HandleCustomerPatienceExpired;
 
-        Destroy(CurrentCustomer.gameObject);
+        Customer customer = CurrentCustomer;
+
         CurrentCustomer = null;
+
+        CurrentCustomerChanged?.Invoke(null);
+
+        Destroy(customer.gameObject);
     }
 
     public void ServeCurrentCustomer()
@@ -77,6 +87,7 @@ public class CustomerManager : MonoBehaviour
         Debug.Log("😡 Customer lost patience!");
 
         GameManager.Instance.RegisterMistake();
+
         RemoveCurrentCustomer();
         SpawnCustomer();
     }

@@ -4,7 +4,6 @@ using UnityEngine;
 public class GameManager : MonoBehaviour
 {
     public static GameManager Instance { get; private set; }
-    public event Action NightStarted;
 
     [Header("Game Settings")]
     [SerializeField] private float nightDuration = 120f;
@@ -16,6 +15,14 @@ public class GameManager : MonoBehaviour
     public int Mistakes { get; private set; }
 
     public bool IsPlaying { get; private set; }
+
+    public event Action NightStarted;
+    public event Action NightEnded;
+
+    public event Action<int> MoneyChanged;
+    public event Action<int> CustomersServedChanged;
+    public event Action<int> MistakesChanged;
+    public event Action<float> TimeRemainingChanged;
 
     private void Awake()
     {
@@ -38,8 +45,13 @@ public class GameManager : MonoBehaviour
         if (TimeRemaining <= 0f)
         {
             TimeRemaining = 0f;
+            TimeRemainingChanged?.Invoke(TimeRemaining);
+
             EndNight();
+            return;
         }
+
+        TimeRemainingChanged?.Invoke(TimeRemaining);
     }
 
     public void StartNight()
@@ -51,6 +63,11 @@ public class GameManager : MonoBehaviour
         TimeRemaining = nightDuration;
         IsPlaying = true;
 
+        MoneyChanged?.Invoke(Money);
+        CustomersServedChanged?.Invoke(CustomersServed);
+        MistakesChanged?.Invoke(Mistakes);
+        TimeRemainingChanged?.Invoke(TimeRemaining);
+
         Debug.Log("🌙 NIGHT STARTED!");
 
         NightStarted?.Invoke();
@@ -60,6 +77,8 @@ public class GameManager : MonoBehaviour
     {
         Money += amount;
 
+        MoneyChanged?.Invoke(Money);
+
         Debug.Log($"💰 Money: ${Money}");
     }
 
@@ -67,12 +86,16 @@ public class GameManager : MonoBehaviour
     {
         CustomersServed++;
 
+        CustomersServedChanged?.Invoke(CustomersServed);
+
         Debug.Log($"👤 Customers served: {CustomersServed}");
     }
 
     public void RegisterMistake()
     {
         Mistakes++;
+
+        MistakesChanged?.Invoke(Mistakes);
 
         Debug.Log($"❌ Mistakes: {Mistakes}");
     }
@@ -85,5 +108,7 @@ public class GameManager : MonoBehaviour
         Debug.Log($"Customers served: {CustomersServed}");
         Debug.Log($"Money earned: ${Money}");
         Debug.Log($"Mistakes: {Mistakes}");
+
+        NightEnded?.Invoke();
     }
 }

@@ -4,11 +4,13 @@ public class Customer : MonoBehaviour
 {
     public float Patience { get; private set; }
     public bool IsServed { get; private set; }
+    public Order CurrentOrder { get; private set; }
 
-    public void Initialize(float patience)
+    public void Initialize(float patience, Order order)
     {
         Patience = patience;
         IsServed = false;
+        CurrentOrder = order;
     }
 
     public void Serve()
@@ -18,6 +20,6 @@ public class Customer : MonoBehaviour
 
         IsServed = true;
 
-        Debug.Log("😊 Customer served!");
+        Debug.Log($"😊 Customer served: {CurrentOrder.Product.ProductName}");
     }
 }

@@ -30,7 +30,7 @@ public class CustomerManager : MonoBehaviour
             Quaternion.identity
         );
 
-        CurrentCustomer.Initialize(10f);
+        CurrentCustomer.Initialize(10f, new Order(new ProductData()));
 
         Debug.Log("👤 New customer arrived!");
     }

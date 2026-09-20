@@ -5,6 +5,7 @@ public class CustomerManager : MonoBehaviour
     [Header("Customer Settings")]
     [SerializeField] private Customer customerPrefab;
     [SerializeField] private Transform spawnPoint;
+    [SerializeField] private OrderGenerator orderGenerator;
 
     public Customer CurrentCustomer { get; private set; }
 
@@ -24,15 +25,22 @@ public class CustomerManager : MonoBehaviour
         if (CurrentCustomer != null)
             return;
 
+        Order order = orderGenerator.GenerateOrder();
+
+        if (order == null)
+            return;
+
         CurrentCustomer = Instantiate(
             customerPrefab,
             spawnPoint.position,
             Quaternion.identity
         );
 
-        CurrentCustomer.Initialize(10f, new Order(new ProductData()));
+        CurrentCustomer.Initialize(10f, order);
 
-        Debug.Log("👤 New customer arrived!");
+        Debug.Log(
+            $"👤 New customer arrived! Order: {order.Product.ProductName}"
+        );
     }
 
     public void RemoveCurrentCustomer()

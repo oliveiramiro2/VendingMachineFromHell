@@ -42,6 +42,7 @@ public class CustomerManager : MonoBehaviour
         );
 
         CurrentCustomer.Initialize(10f, order);
+        CurrentCustomer.PatienceExpired += HandleCustomerPatienceExpired;
 
         Debug.Log(
             $"👤 New customer arrived! Order: {order.Product.ProductName}"
@@ -53,6 +54,8 @@ public class CustomerManager : MonoBehaviour
         if (CurrentCustomer == null)
             return;
 
+        CurrentCustomer.PatienceExpired -= HandleCustomerPatienceExpired;
+
         Destroy(CurrentCustomer.gameObject);
         CurrentCustomer = null;
     }
@@ -62,6 +65,18 @@ public class CustomerManager : MonoBehaviour
         if (CurrentCustomer == null)
             return;
 
+        RemoveCurrentCustomer();
+        SpawnCustomer();
+    }
+
+    private void HandleCustomerPatienceExpired()
+    {
+        if (CurrentCustomer == null)
+            return;
+
+        Debug.Log("😡 Customer lost patience!");
+
+        GameManager.Instance.RegisterMistake();
         RemoveCurrentCustomer();
         SpawnCustomer();
     }

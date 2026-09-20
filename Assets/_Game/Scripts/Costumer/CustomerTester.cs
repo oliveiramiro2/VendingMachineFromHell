@@ -7,7 +7,7 @@ public class CustomerTester : MonoBehaviour
 
     private void Update()
     {
-        if (!Keyboard.current.spaceKey.isPressed)
+        if (!Keyboard.current.spaceKey.wasPressedThisFrame)
             return;
 
         CustomerManager customerManager =

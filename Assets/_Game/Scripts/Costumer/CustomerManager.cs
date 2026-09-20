@@ -56,4 +56,13 @@ public class CustomerManager : MonoBehaviour
         Destroy(CurrentCustomer.gameObject);
         CurrentCustomer = null;
     }
+
+    public void ServeCurrentCustomer()
+    {
+        if (CurrentCustomer == null)
+            return;
+
+        RemoveCurrentCustomer();
+        SpawnCustomer();
+    }
 }

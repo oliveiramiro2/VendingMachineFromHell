@@ -19,9 +19,14 @@ public class VendingMachine : MonoBehaviour
 
         bool success = customer.TryServe(product);
 
-        if (success)
-        {
-            Debug.Log($"🥤 Delivered: {product.ProductName}");
-        }
+        if (!success)
+            return;
+
+        GameManager.Instance.AddMoney(product.Price);
+        GameManager.Instance.RegisterCustomer();
+
+        Debug.Log($"🥤 Delivered: {product.ProductName}");
+
+        customerManager.ServeCurrentCustomer();
     }
 }

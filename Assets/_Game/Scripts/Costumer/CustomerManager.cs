@@ -8,6 +8,17 @@ public class CustomerManager : MonoBehaviour
 
     public Customer CurrentCustomer { get; private set; }
 
+    private void Start()
+    {
+        GameManager.Instance.NightStarted += SpawnCustomer;
+    }
+
+    private void OnDestroy()
+    {
+        if (GameManager.Instance != null)
+            GameManager.Instance.NightStarted -= SpawnCustomer;
+    }
+
     public void SpawnCustomer()
     {
         if (CurrentCustomer != null)

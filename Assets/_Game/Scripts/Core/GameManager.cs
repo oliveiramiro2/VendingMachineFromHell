@@ -1,8 +1,10 @@
+using System;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
     public static GameManager Instance { get; private set; }
+    public event Action NightStarted;
 
     [Header("Game Settings")]
     [SerializeField] private float nightDuration = 120f;
@@ -50,6 +52,8 @@ public class GameManager : MonoBehaviour
         IsPlaying = true;
 
         Debug.Log("🌙 NIGHT STARTED!");
+
+        NightStarted?.Invoke();
     }
 
     public void AddMoney(int amount)

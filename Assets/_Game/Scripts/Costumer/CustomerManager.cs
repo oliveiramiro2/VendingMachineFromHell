@@ -12,6 +12,11 @@ public class CustomerManager : MonoBehaviour
     private void Start()
     {
         GameManager.Instance.NightStarted += SpawnCustomer;
+
+        if (GameManager.Instance.IsPlaying)
+        {
+            SpawnCustomer();
+        }
     }
 
     private void OnDestroy()

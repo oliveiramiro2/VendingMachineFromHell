@@ -13,13 +13,21 @@ public class Customer : MonoBehaviour
         CurrentOrder = order;
     }
 
-    public void Serve()
+    public bool TryServe(ProductData product)
     {
         if (IsServed)
-            return;
+            return false;
+
+        if (!CurrentOrder.IsSatisfiedBy(product))
+        {
+            Debug.Log("❌ Wrong product!");
+            return false;
+        }
 
         IsServed = true;
 
-        Debug.Log($"😊 Customer served: {CurrentOrder.Product.ProductName}");
+        Debug.Log($"😊 Customer served: {product.ProductName}");
+
+        return true;
     }
 }

@@ -828,6 +828,18 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
+      - m_Target: {fileID: 1747260580}
+        m_TargetAssemblyTypeName: AudioManager, Assembly-CSharp
+        m_MethodName: PlayProductClick
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
       - m_Target: {fileID: 1110347350}
         m_TargetAssemblyTypeName: VendingMachine, Assembly-CSharp
         m_MethodName: DeliverProduct
@@ -3576,6 +3588,7 @@ MonoBehaviour:
   customerPatienceExpiredClip: {fileID: 8300000, guid: 9e0401f74d4d41743bee9fa0807d7193, type: 3}
   nightEndedClip: {fileID: 8300000, guid: 5694b915da18ed247b1bafdacacb7543, type: 3}
   resultClip: {fileID: 8300000, guid: 1082238251be25b4fbd52320fbe298e1, type: 3}
+  productClickClip: {fileID: 8300000, guid: 74837c998e3298947b0d937931b297ac, type: 3}
 --- !u!4 &1747260581
 Transform:
   m_ObjectHideFlags: 0
@@ -4223,6 +4236,18 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
+      - m_Target: {fileID: 1747260580}
+        m_TargetAssemblyTypeName: AudioManager, Assembly-CSharp
+        m_MethodName: PlayProductClick
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
       - m_Target: {fileID: 1110347350}
         m_TargetAssemblyTypeName: VendingMachine, Assembly-CSharp
         m_MethodName: DeliverProduct
@@ -4838,6 +4863,18 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
+      - m_Target: {fileID: 1747260580}
+        m_TargetAssemblyTypeName: AudioManager, Assembly-CSharp
+        m_MethodName: PlayProductClick
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
       - m_Target: {fileID: 1110347350}
         m_TargetAssemblyTypeName: VendingMachine, Assembly-CSharp
         m_MethodName: DeliverProduct

@@ -15,6 +15,7 @@ public class AudioManager : MonoBehaviour
     [SerializeField] private AudioClip customerPatienceExpiredClip;
     [SerializeField] private AudioClip nightEndedClip;
     [SerializeField] private AudioClip resultClip;
+    [SerializeField] private AudioClip productClickClip;
 
     private CustomerManager customerManager;
 
@@ -101,5 +102,10 @@ public class AudioManager : MonoBehaviour
             return;
 
         effectsSource.PlayOneShot(clip);
+    }
+
+    public void PlayProductClick()
+    {
+        PlayEffect(productClickClip);
     }
 }

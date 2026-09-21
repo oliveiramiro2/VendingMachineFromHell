@@ -294,6 +294,20 @@ public class GameUI : MonoBehaviour
         ClearFeedback();
     }
 
+    public void HideNightEnded()
+    {
+        resultMoneyText.text =
+            $"";
+
+        resultCustomersText.text =
+            $"";
+
+        resultMistakesText.text =
+            $"";
+
+        resultPanel.SetActive(false);
+    }
+
     private void ClearFeedback()
     {
         feedbackText.text = string.Empty;

@@ -11,6 +11,10 @@ public class CustomerManager : MonoBehaviour
     public Customer CurrentCustomer { get; private set; }
 
     public event Action<Customer> CurrentCustomerChanged;
+    public event Action<ProductData> ProductServed;
+    public event Action<ProductData> WrongProductAttempted;
+    public event Action CustomerSpawned;
+    public event Action CustomerPatienceExpired;
 
     private void Start()
     {
@@ -49,9 +53,13 @@ public class CustomerManager : MonoBehaviour
         );
 
         CurrentCustomer.Initialize(10f, order);
+
         CurrentCustomer.PatienceExpired += HandleCustomerPatienceExpired;
+        CurrentCustomer.ProductServed += HandleProductServed;
+        CurrentCustomer.WrongProductAttempted += HandleWrongProduct;
 
         CurrentCustomerChanged?.Invoke(CurrentCustomer);
+        CustomerSpawned?.Invoke();
 
         Debug.Log(
             $"👤 New customer arrived! Order: {order.Product.ProductName}"
@@ -63,9 +71,11 @@ public class CustomerManager : MonoBehaviour
         if (CurrentCustomer == null)
             return;
 
-        CurrentCustomer.PatienceExpired -= HandleCustomerPatienceExpired;
-
         Customer customer = CurrentCustomer;
+
+        customer.PatienceExpired -= HandleCustomerPatienceExpired;
+        customer.ProductServed -= HandleProductServed;
+        customer.WrongProductAttempted -= HandleWrongProduct;
 
         CurrentCustomer = null;
 
@@ -88,12 +98,24 @@ public class CustomerManager : MonoBehaviour
         if (CurrentCustomer == null)
             return;
 
+        CustomerPatienceExpired?.Invoke();
+
         Debug.Log("😡 Customer lost patience!");
 
         GameManager.Instance.RegisterMistake();
 
         RemoveCurrentCustomer();
         SpawnCustomer();
+    }
+
+    private void HandleProductServed(ProductData product)
+    {
+        ProductServed?.Invoke(product);
+    }
+
+    private void HandleWrongProduct(ProductData product)
+    {
+        WrongProductAttempted?.Invoke(product);
     }
 
     private void HandleNightEnded()

@@ -3569,6 +3569,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::AudioManager
   effectsSource: {fileID: 801305032}
+  nightStartedClip: {fileID: 8300000, guid: b57f9fc0adb4a9d4da1b4267ec493242, type: 3}
+  customerSpawnedClip: {fileID: 8300000, guid: 23c584676c77cd44d8c2386b3defd53c, type: 3}
+  correctProductClip: {fileID: 8300000, guid: 9a785006f8df79f47ba608591ed66ed0, type: 3}
+  wrongProductClip: {fileID: 8300000, guid: 63c754da4e211ce4692ba7899fa7223f, type: 3}
+  customerPatienceExpiredClip: {fileID: 8300000, guid: 9e0401f74d4d41743bee9fa0807d7193, type: 3}
+  nightEndedClip: {fileID: 8300000, guid: 5694b915da18ed247b1bafdacacb7543, type: 3}
+  resultClip: {fileID: 8300000, guid: 1082238251be25b4fbd52320fbe298e1, type: 3}
 --- !u!4 &1747260581
 Transform:
   m_ObjectHideFlags: 0

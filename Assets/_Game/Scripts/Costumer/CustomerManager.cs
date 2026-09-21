@@ -7,6 +7,7 @@ public class CustomerManager : MonoBehaviour
     [SerializeField] private Customer customerPrefab;
     [SerializeField] private Transform spawnPoint;
     [SerializeField] private OrderGenerator orderGenerator;
+    [SerializeField] private CustomerData[] availableCustomers;
 
     public Customer CurrentCustomer { get; private set; }
 
@@ -52,7 +53,17 @@ public class CustomerManager : MonoBehaviour
             Quaternion.identity
         );
 
-        CurrentCustomer.Initialize(10f, order);
+        float patience = 10f;
+
+        if (availableCustomers.Length > 0)
+        {
+            CustomerData customerData = availableCustomers[
+                UnityEngine.Random.Range(0, availableCustomers.Length)
+            ];
+            patience = customerData.Patience > 0f ? customerData.Patience : patience;
+        }
+
+        CurrentCustomer.Initialize(patience, order);
 
         CurrentCustomer.PatienceExpired += HandleCustomerPatienceExpired;
         CurrentCustomer.ProductServed += HandleProductServed;
@@ -62,7 +73,7 @@ public class CustomerManager : MonoBehaviour
         CustomerSpawned?.Invoke();
 
         Debug.Log(
-            $"👤 New customer arrived! Order: {order.Product.ProductName}"
+            $"👤 New customer arrived! Order: {order.Product.ProductName} - {patience}"
         );
     }
 

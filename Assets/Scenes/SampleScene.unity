@@ -1402,6 +1402,9 @@ MonoBehaviour:
   customerPrefab: {fileID: 2991035560816825324, guid: 7dfd7b6a39781f24bbdb49a144b8744b, type: 3}
   spawnPoint: {fileID: 488332964}
   orderGenerator: {fileID: 153135723}
+  availableCustomers:
+  - {fileID: 11400000, guid: be89ee84b6f7ede49aec85e372aecb2d, type: 2}
+  - {fileID: 11400000, guid: 7bdd679ee2ade6a479d78c7f21961dc5, type: 2}
 --- !u!4 &612939737
 Transform:
   m_ObjectHideFlags: 0

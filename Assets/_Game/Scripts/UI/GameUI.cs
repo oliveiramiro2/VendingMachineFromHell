@@ -10,12 +10,22 @@ public class GameUI : MonoBehaviour
     [SerializeField] private TMP_Text mistakesText;
     [SerializeField] private TMP_Text timerText;
 
-    [Header("Customer")]
+    [Header("Customer Order")]
     [SerializeField] private TMP_Text orderText;
+    [SerializeField] private Image orderIcon;
+
+    [Header("Customer Patience")]
     [SerializeField] private Slider patienceSlider;
+    [SerializeField] private TMP_Text patienceWarningText;
+
+    [Header("Feedback")]
+    [SerializeField] private TMP_Text feedbackText;
+    [SerializeField] private float feedbackDuration = 0.75f;
 
     private CustomerManager customerManager;
     private Customer currentCustomer;
+
+    private float feedbackTimer;
 
     private void Start()
     {
@@ -47,9 +57,24 @@ public class GameUI : MonoBehaviour
         UpdateMistakes(gameManager.Mistakes);
         UpdateTimer(gameManager.TimeRemaining);
 
+        ClearFeedback();
+
         if (customerManager.CurrentCustomer != null)
         {
             HandleCurrentCustomerChanged(customerManager.CurrentCustomer);
+        }
+    }
+
+    private void Update()
+    {
+        if (feedbackTimer <= 0f)
+            return;
+
+        feedbackTimer -= Time.deltaTime;
+
+        if (feedbackTimer <= 0f)
+        {
+            ClearFeedback();
         }
     }
 
@@ -87,6 +112,8 @@ public class GameUI : MonoBehaviour
 
         currentCustomer.PatienceChanged += UpdatePatience;
         currentCustomer.OrderInitialized += UpdateOrder;
+        currentCustomer.ProductServed += HandleProductServed;
+        currentCustomer.WrongProductAttempted += HandleWrongProduct;
 
         UpdatePatience(currentCustomer.Patience);
         UpdateOrder(currentCustomer.CurrentOrder);
@@ -99,6 +126,8 @@ public class GameUI : MonoBehaviour
 
         currentCustomer.PatienceChanged -= UpdatePatience;
         currentCustomer.OrderInitialized -= UpdateOrder;
+        currentCustomer.ProductServed -= HandleProductServed;
+        currentCustomer.WrongProductAttempted -= HandleWrongProduct;
 
         currentCustomer = null;
     }
@@ -133,6 +162,20 @@ public class GameUI : MonoBehaviour
 
         patienceSlider.maxValue = currentCustomer.MaxPatience;
         patienceSlider.value = patience;
+
+        float patiencePercent =
+            patience / currentCustomer.MaxPatience;
+
+        patienceWarningText.enabled = patiencePercent <= 0.25f;
+
+        if (patiencePercent <= 0.25f)
+        {
+            patienceWarningText.text = "HURRY!";
+        }
+        else
+        {
+            patienceWarningText.text = string.Empty;
+        }
     }
 
     private void UpdateOrder(Order order)
@@ -140,15 +183,53 @@ public class GameUI : MonoBehaviour
         if (order == null || order.Product == null)
         {
             orderText.text = "Order: ---";
+            orderIcon.enabled = false;
             return;
         }
 
-        orderText.text = $"{order.Product.ProductName}";
+        orderText.text = order.Product.ProductName;
+
+        if (order.Product.Icon != null)
+        {
+            orderIcon.sprite = order.Product.Icon;
+            orderIcon.enabled = true;
+        }
+        else
+        {
+            orderIcon.enabled = false;
+        }
+    }
+
+    private void HandleProductServed(ProductData product)
+    {
+        ShowFeedback($"+${product.Price}  CORRECT!", feedbackDuration);
+    }
+
+    private void HandleWrongProduct(ProductData product)
+    {
+        ShowFeedback("WRONG PRODUCT!", feedbackDuration);
+    }
+
+    private void ShowFeedback(string message, float duration)
+    {
+        feedbackText.text = message;
+        feedbackText.enabled = true;
+
+        feedbackTimer = duration;
+    }
+
+    private void ClearFeedback()
+    {
+        feedbackText.text = string.Empty;
+        feedbackText.enabled = false;
+        feedbackTimer = 0f;
     }
 
     private void ClearCustomerUI()
     {
         orderText.text = "Order: ---";
+        orderIcon.enabled = false;
         patienceSlider.value = 0f;
+        patienceWarningText.enabled = false;
     }
 }

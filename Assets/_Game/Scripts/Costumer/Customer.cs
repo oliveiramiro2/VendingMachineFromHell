@@ -13,6 +13,9 @@ public class Customer : MonoBehaviour
     public event Action<float> PatienceChanged;
     public event Action<Order> OrderInitialized;
 
+    public event Action<ProductData> ProductServed;
+    public event Action<ProductData> WrongProductAttempted;
+
     private void Update()
     {
         if (IsServed)
@@ -56,12 +59,17 @@ public class Customer : MonoBehaviour
         if (!CurrentOrder.IsSatisfiedBy(product))
         {
             Debug.Log("❌ Wrong product!");
+
+            WrongProductAttempted?.Invoke(product);
+
             return false;
         }
 
         IsServed = true;
 
         Debug.Log($"😊 Customer served: {product.ProductName}");
+
+        ProductServed?.Invoke(product);
 
         return true;
     }

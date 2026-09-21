@@ -8,6 +8,8 @@ public class Customer : MonoBehaviour
 
     public bool IsServed { get; private set; }
     public Order CurrentOrder { get; private set; }
+    private CustomerData customerData;
+    public int Reward { get; private set; }
 
     public event Action PatienceExpired;
     public event Action<float> PatienceChanged;
@@ -36,13 +38,14 @@ public class Customer : MonoBehaviour
         PatienceChanged?.Invoke(Patience);
     }
 
-    public void Initialize(float patience, Order order)
+    public void Initialize(Order order, CustomerData data)
     {
-        MaxPatience = patience;
-        Patience = patience;
+        MaxPatience = data.Patience;
+        Patience = data.Patience;
 
         IsServed = false;
         CurrentOrder = order;
+        customerData = data;
 
         PatienceChanged?.Invoke(Patience);
         OrderInitialized?.Invoke(CurrentOrder);
@@ -64,6 +67,10 @@ public class Customer : MonoBehaviour
 
             return false;
         }
+
+        Reward = Mathf.RoundToInt(
+            product.Price * customerData.RewardMultiplier
+        );
 
         IsServed = true;
 

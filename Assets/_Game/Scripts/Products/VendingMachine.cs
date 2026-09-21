@@ -22,7 +22,7 @@ public class VendingMachine : MonoBehaviour
         if (!success)
             return;
 
-        GameManager.Instance.AddMoney(product.Price);
+        GameManager.Instance.AddMoney(customer.Reward);
         GameManager.Instance.RegisterCustomer();
 
         Debug.Log($"🥤 Delivered: {product.ProductName}");

@@ -7,6 +7,9 @@ using UnityEngine;
 public class CustomerData : ScriptableObject
 {
     [SerializeField] private float patience;
+    [SerializeField] private float rewardMultiplier = 1f;
+
 
     public float Patience => patience;
+    public float RewardMultiplier => rewardMultiplier;
 }

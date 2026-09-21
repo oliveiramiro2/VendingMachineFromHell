@@ -47,23 +47,26 @@ public class CustomerManager : MonoBehaviour
         if (order == null)
             return;
 
+        if (availableCustomers == null || availableCustomers.Length == 0)
+        {
+            Debug.LogError(
+                "Can't create customer. Add at least one CustomerData."
+            );
+
+            return;
+        }
+
+        CustomerData customerData = availableCustomers[
+            UnityEngine.Random.Range(0, availableCustomers.Length)
+        ];
+
         CurrentCustomer = Instantiate(
             customerPrefab,
             spawnPoint.position,
             Quaternion.identity
         );
 
-        float patience = 10f;
-
-        if (availableCustomers.Length > 0)
-        {
-            CustomerData customerData = availableCustomers[
-                UnityEngine.Random.Range(0, availableCustomers.Length)
-            ];
-            patience = customerData.Patience > 0f ? customerData.Patience : patience;
-        }
-
-        CurrentCustomer.Initialize(patience, order);
+        CurrentCustomer.Initialize(order, customerData);
 
         CurrentCustomer.PatienceExpired += HandleCustomerPatienceExpired;
         CurrentCustomer.ProductServed += HandleProductServed;
@@ -73,7 +76,7 @@ public class CustomerManager : MonoBehaviour
         CustomerSpawned?.Invoke();
 
         Debug.Log(
-            $"👤 New customer arrived! Order: {order.Product.ProductName} - {patience}"
+            $"👤 New customer arrived! Order: {order.Product.ProductName}"
         );
     }
 

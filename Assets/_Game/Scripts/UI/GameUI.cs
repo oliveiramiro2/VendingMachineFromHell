@@ -105,17 +105,17 @@ public class GameUI : MonoBehaviour
 
     private void UpdateMoney(int money)
     {
-        moneyText.text = $"Money: ${money}";
+        moneyText.text = $"${money}";
     }
 
     private void UpdateCustomersServed(int customersServed)
     {
-        customersServedText.text = $"Served: {customersServed}";
+        customersServedText.text = $"{customersServed}";
     }
 
     private void UpdateMistakes(int mistakes)
     {
-        mistakesText.text = $"Mistakes: {mistakes}";
+        mistakesText.text = $"{mistakes}";
     }
 
     private void UpdateTimer(float timeRemaining)
@@ -143,7 +143,7 @@ public class GameUI : MonoBehaviour
             return;
         }
 
-        orderText.text = $"Order: {order.Product.ProductName}";
+        orderText.text = $"{order.Product.ProductName}";
     }
 
     private void ClearCustomerUI()

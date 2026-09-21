@@ -21,11 +21,20 @@ public class GameUI : MonoBehaviour
     [Header("Feedback")]
     [SerializeField] private TMP_Text feedbackText;
     [SerializeField] private float feedbackDuration = 0.75f;
+    [SerializeField] private float feedbackPopScale = 1.25f;
+    [SerializeField] private float feedbackScaleSpeed = 8f;
+
+    [Header("Patience Warning")]
+    [SerializeField] private float warningPulseSpeed = 6f;
+    [SerializeField] private float warningPulseAmount = 0.15f;
 
     private CustomerManager customerManager;
     private Customer currentCustomer;
 
     private float feedbackTimer;
+    private Vector3 feedbackOriginalScale;
+
+    private Vector3 warningOriginalScale;
 
     private void Start()
     {
@@ -44,6 +53,9 @@ public class GameUI : MonoBehaviour
             Debug.LogError("GameUI could not find CustomerManager.");
             return;
         }
+
+        feedbackOriginalScale = feedbackText.transform.localScale;
+        warningOriginalScale = patienceWarningText.transform.localScale;
 
         gameManager.MoneyChanged += UpdateMoney;
         gameManager.CustomersServedChanged += UpdateCustomersServed;
@@ -67,15 +79,8 @@ public class GameUI : MonoBehaviour
 
     private void Update()
     {
-        if (feedbackTimer <= 0f)
-            return;
-
-        feedbackTimer -= Time.deltaTime;
-
-        if (feedbackTimer <= 0f)
-        {
-            ClearFeedback();
-        }
+        UpdateFeedbackAnimation();
+        UpdatePatienceWarningAnimation();
     }
 
     private void OnDestroy()
@@ -175,6 +180,8 @@ public class GameUI : MonoBehaviour
         else
         {
             patienceWarningText.text = string.Empty;
+            patienceWarningText.transform.localScale =
+                warningOriginalScale;
         }
     }
 
@@ -202,12 +209,18 @@ public class GameUI : MonoBehaviour
 
     private void HandleProductServed(ProductData product)
     {
-        ShowFeedback($"+${product.Price}  CORRECT!", feedbackDuration);
+        ShowFeedback(
+            $"+${product.Price}  CORRECT!",
+            feedbackDuration
+        );
     }
 
     private void HandleWrongProduct(ProductData product)
     {
-        ShowFeedback("WRONG PRODUCT!", feedbackDuration);
+        ShowFeedback(
+            "WRONG PRODUCT!",
+            feedbackDuration
+        );
     }
 
     private void ShowFeedback(string message, float duration)
@@ -216,6 +229,42 @@ public class GameUI : MonoBehaviour
         feedbackText.enabled = true;
 
         feedbackTimer = duration;
+
+        feedbackText.transform.localScale =
+            feedbackOriginalScale * feedbackPopScale;
+    }
+
+    private void UpdateFeedbackAnimation()
+    {
+        if (!feedbackText.enabled)
+            return;
+
+        feedbackTimer -= Time.deltaTime;
+
+        if (feedbackTimer <= 0f)
+        {
+            ClearFeedback();
+            return;
+        }
+
+        feedbackText.transform.localScale = Vector3.Lerp(
+            feedbackText.transform.localScale,
+            feedbackOriginalScale,
+            Time.deltaTime * feedbackScaleSpeed
+        );
+    }
+
+    private void UpdatePatienceWarningAnimation()
+    {
+        if (!patienceWarningText.enabled)
+            return;
+
+        float pulse = Mathf.Sin(
+            Time.time * warningPulseSpeed
+        ) * warningPulseAmount;
+
+        patienceWarningText.transform.localScale =
+            warningOriginalScale * (1f + pulse);
     }
 
     private void ClearFeedback()
@@ -223,13 +272,21 @@ public class GameUI : MonoBehaviour
         feedbackText.text = string.Empty;
         feedbackText.enabled = false;
         feedbackTimer = 0f;
+
+        feedbackText.transform.localScale =
+            feedbackOriginalScale;
     }
 
     private void ClearCustomerUI()
     {
         orderText.text = "Order: ---";
+
         orderIcon.enabled = false;
+
         patienceSlider.value = 0f;
+
         patienceWarningText.enabled = false;
+        patienceWarningText.transform.localScale =
+            warningOriginalScale;
     }
 }

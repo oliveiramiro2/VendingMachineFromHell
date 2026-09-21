@@ -15,6 +15,7 @@ public class CustomerManager : MonoBehaviour
     private void Start()
     {
         GameManager.Instance.NightStarted += SpawnCustomer;
+        GameManager.Instance.NightEnded += HandleNightEnded;
 
         if (GameManager.Instance.IsPlaying)
         {
@@ -24,8 +25,11 @@ public class CustomerManager : MonoBehaviour
 
     private void OnDestroy()
     {
-        if (GameManager.Instance != null)
-            GameManager.Instance.NightStarted -= SpawnCustomer;
+        if (GameManager.Instance == null)
+            return;
+
+        GameManager.Instance.NightStarted -= SpawnCustomer;
+        GameManager.Instance.NightEnded -= HandleNightEnded;
     }
 
     public void SpawnCustomer()
@@ -90,5 +94,12 @@ public class CustomerManager : MonoBehaviour
 
         RemoveCurrentCustomer();
         SpawnCustomer();
+    }
+
+    private void HandleNightEnded()
+    {
+        Debug.Log("🚪 CustomerManager shutting down current customer.");
+
+        RemoveCurrentCustomer();
     }
 }

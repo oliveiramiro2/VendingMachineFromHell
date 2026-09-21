@@ -28,18 +28,22 @@ public class GameUI : MonoBehaviour
     [SerializeField] private float warningPulseSpeed = 6f;
     [SerializeField] private float warningPulseAmount = 0.15f;
 
+    [Header("Night Result")]
+    [SerializeField] private GameObject resultPanel;
+    [SerializeField] private TMP_Text resultMoneyText;
+    [SerializeField] private TMP_Text resultCustomersText;
+    [SerializeField] private TMP_Text resultMistakesText;
+
     private CustomerManager customerManager;
     private Customer currentCustomer;
 
     private float feedbackTimer;
     private Vector3 feedbackOriginalScale;
-
     private Vector3 warningOriginalScale;
 
     private void Start()
     {
         GameManager gameManager = GameManager.Instance;
-
         customerManager = FindAnyObjectByType<CustomerManager>();
 
         if (gameManager == null)
@@ -62,6 +66,8 @@ public class GameUI : MonoBehaviour
         gameManager.MistakesChanged += UpdateMistakes;
         gameManager.TimeRemainingChanged += UpdateTimer;
 
+        gameManager.NightEnded += HandleNightEnded;
+
         customerManager.CurrentCustomerChanged += HandleCurrentCustomerChanged;
 
         UpdateMoney(gameManager.Money);
@@ -75,6 +81,8 @@ public class GameUI : MonoBehaviour
         {
             HandleCurrentCustomerChanged(customerManager.CurrentCustomer);
         }
+
+        resultPanel.SetActive(!gameManager.IsPlaying);
     }
 
     private void Update()
@@ -93,6 +101,8 @@ public class GameUI : MonoBehaviour
             gameManager.CustomersServedChanged -= UpdateCustomersServed;
             gameManager.MistakesChanged -= UpdateMistakes;
             gameManager.TimeRemainingChanged -= UpdateTimer;
+
+            gameManager.NightEnded -= HandleNightEnded;
         }
 
         if (customerManager != null)
@@ -267,6 +277,23 @@ public class GameUI : MonoBehaviour
             warningOriginalScale * (1f + pulse);
     }
 
+    private void HandleNightEnded()
+    {
+        resultMoneyText.text =
+            $"Money: ${GameManager.Instance.Money}";
+
+        resultCustomersText.text =
+            $"Served: {GameManager.Instance.CustomersServed}";
+
+        resultMistakesText.text =
+            $"Mistakes: {GameManager.Instance.Mistakes}";
+
+        resultPanel.SetActive(true);
+
+        ClearCustomerUI();
+        ClearFeedback();
+    }
+
     private void ClearFeedback()
     {
         feedbackText.text = string.Empty;
@@ -280,9 +307,7 @@ public class GameUI : MonoBehaviour
     private void ClearCustomerUI()
     {
         orderText.text = "Order: ---";
-
         orderIcon.enabled = false;
-
         patienceSlider.value = 0f;
 
         patienceWarningText.enabled = false;

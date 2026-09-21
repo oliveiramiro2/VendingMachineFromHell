@@ -1,6 +1,7 @@
 using UnityEngine;
 using System;
 
+[RequireComponent(typeof(SpriteRenderer))]
 public class Customer : MonoBehaviour
 {
     public float Patience { get; private set; }
@@ -11,12 +12,20 @@ public class Customer : MonoBehaviour
     private CustomerData customerData;
     public int Reward { get; private set; }
 
+    [Header("Custom customer")]
+    [SerializeField] private SpriteRenderer spriteRenderer;
+
     public event Action PatienceExpired;
     public event Action<float> PatienceChanged;
     public event Action<Order> OrderInitialized;
 
     public event Action<ProductData> ProductServed;
     public event Action<ProductData> WrongProductAttempted;
+
+    private void Awake()
+    {
+        spriteRenderer = GetComponent<SpriteRenderer>();
+    }
 
     private void Update()
     {
@@ -46,6 +55,8 @@ public class Customer : MonoBehaviour
         IsServed = false;
         CurrentOrder = order;
         customerData = data;
+
+        spriteRenderer.sprite = data.Sprite;
 
         PatienceChanged?.Invoke(Patience);
         OrderInitialized?.Invoke(CurrentOrder);
